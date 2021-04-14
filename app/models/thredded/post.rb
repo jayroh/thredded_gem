@@ -34,7 +34,8 @@ module Thredded
 
     validates :messageboard_id, presence: true
 
-    after_commit :update_parent_last_user_and_time_from_last_post, on: %i[create destroy]
+    # postable won't exist when destroying a messageboard because topics are destroyed before the posts
+    after_commit :update_parent_last_user_and_time_from_last_post, on: %i[create destroy], if: :postable
     after_commit :update_parent_last_user_and_time_from_last_post_if_moderation_state_changed, on: :update
 
     after_commit :update_unread_posts_count_if_moderation_state_changed, on: :update
